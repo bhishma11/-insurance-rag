@@ -19,7 +19,7 @@
 
 | Login Page | Signup Page |
 |------------|-------------|
-| ![Login](screenshots/login.png) | ![Signup](screenshots/signup.png) |
+| ![Login](screenshots/login.png) |![Signup](screenshots/signup.png?raw=true&v=2)|
 
 | Chat Interface | DeepSeek LLM Response |
 |----------------|----------------------|
