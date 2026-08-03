@@ -49,3 +49,9 @@ deploy.zip
 *.zip
 Dockerfile-1
 docker-compose.override.yml
+
+# Large model files
+offload/
+*.dat
+*.bin
+*.safetensors
