@@ -1,0 +1,65 @@
+{
+  "name": "Ticket Email Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "ticket-email",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "webhook-ticket",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = $input.first().json;\nconst ticket = 'TICKET-' + Date.now() + '-' + Math.random().toString(36).substring(7);\nconst result = {\n  to: data.to || data.email || 'user@example.com',\n  ticket: ticket,\n  user_id: data.user_id || 'unknown',\n  subject: 'Your Insurance Access Ticket',\n  message: 'Hello,\\n\\nYour access ticket is: ' + ticket + '\\n\\nPlease use this to activate your account.\\n\\nThank you.'\n};\nreturn result;"
+      },
+      "id": "generate-ticket",
+      "name": "Generate Ticket",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "tickets@insurance.ai",
+        "toEmail": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "text": "={{ $json.message }}",
+        "options": {}
+      },
+      "id": "send-ticket",
+      "name": "Send Ticket Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "responseBody": "{\"status\":\"ticket_sent\",\"ticket\":\"{{ $json.ticket }}\"}"
+      },
+      "id": "response-ticket",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Generate Ticket", "type": "main", "index": 0}]]
+    },
+    "Generate Ticket": {
+      "main": [[{"node": "Send Ticket Email", "type": "main", "index": 0}]]
+    },
+    "Send Ticket Email": {
+      "main": [[{"node": "Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

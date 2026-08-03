@@ -1,0 +1,81 @@
+{
+  "name": "Claim Processing Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "claim-processing",
+        "responseMode": "onReceived",
+        "responseData": "{\"status\":\"processing\",\"message\":\"Claim received\"}",
+        "options": {}
+      },
+      "id": "webhook-claim",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = $input.first().json;\nconst claim = data.claim || {};\n\n// Validate claim\nif (!claim.claim_id) {\n  throw new Error('Claim ID required');\n}\n\n// Process claim\nconst result = {\n  claim_id: claim.claim_id,\n  status: 'Approved',\n  amount: claim.amount || 1000,\n  email: claim.email || 'user@example.com',\n  next_steps: 'Payment will be processed within 7 days',\n  processed_at: new Date().toISOString()\n};\n\nreturn result;"
+      },
+      "id": "process-claim",
+      "name": "Process Claim",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "claims@insurance.ai",
+        "toEmail": "={{ $json.email }}",
+        "subject": "Claim Status Update",
+        "text": "Your claim {{ $json.claim_id }} is {{ $json.status }}. {{ $json.next_steps }}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "UPDATE claims SET status = '{{ $json.status }}', amount = {{ $json.amount }}, processed_at = '{{ $json.processed_at }}' WHERE claim_id = '{{ $json.claim_id }}'",
+        "options": {}
+      },
+      "id": "update-db",
+      "name": "Update Database",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "responseBody": "{\"status\":\"success\",\"claim\":{{ $json | toJson }}}"
+      },
+      "id": "response",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Process Claim", "type": "main", "index": 0}]]
+    },
+    "Process Claim": {
+      "main": [[{"node": "Send Email", "type": "main", "index": 0}]]
+    },
+    "Send Email": {
+      "main": [[{"node": "Update Database", "type": "main", "index": 0}]]
+    },
+    "Update Database": {
+      "main": [[{"node": "Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

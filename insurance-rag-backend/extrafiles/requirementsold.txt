@@ -1,0 +1,67 @@
+# ============================================
+# CORE SERVER (FastAPI + Async)
+# ============================================
+fastapi
+uvicorn[standard]
+python-multipart
+websockets
+httpx
+requests
+pyjwt
+peft
+accelerate
+
+# ============================================
+# DATABASE & STORAGE
+# ============================================
+pg8000
+psycopg2-binary
+redis
+supabase
+azure-storage-blob
+
+# ============================================
+# MODERN LANGCHAIN & LLM INTEGRATION
+# ============================================
+langchain
+langchain-community
+langchain-openai
+langchain-core
+langgraph
+openai
+
+# ============================================
+# VECTOR SEARCH & ML
+# ============================================
+sentence-transformers
+faiss-cpu
+chromadb
+rank-bm25
+numpy
+tiktoken
+
+# ============================================
+# DOCUMENT PROCESSING
+# ============================================
+PyPDF2
+python-docx
+python-pptx
+openpyxl
+beautifulsoup4
+pandas
+Pillow
+
+# ============================================
+# CLOUD & VOICE SERVICES
+# ============================================
+google-cloud-speech
+google-cloud-texttospeech
+azure-search-documents
+soundfile
+
+# ============================================
+# UTILITIES
+# ============================================
+python-dotenv
+plotly
+pytest

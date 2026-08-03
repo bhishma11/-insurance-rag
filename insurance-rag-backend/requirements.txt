@@ -1,0 +1,72 @@
+# ============================================
+# CORE SERVER (FastAPI + Async)
+# ============================================
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+python-multipart>=0.0.6
+websockets>=12.0
+httpx>=0.25.0
+requests>=2.31.0
+pyjwt>=2.8.0
+peft>=0.7.0
+accelerate>=0.25.0
+
+# ============================================
+# DATABASE & STORAGE
+# ============================================
+pg8000
+psycopg2-binary>=2.9.9
+redis>=5.0.1
+supabase>=2.3.0
+azure-storage-blob>=12.19.0
+
+# ============================================
+# MODERN LANGCHAIN & LLM INTEGRATION
+# ============================================
+langchain>=0.1.0
+langchain-community>=0.0.20
+langchain-openai>=0.0.8
+langchain-core>=0.1.20
+langgraph>=0.0.25
+openai>=1.12.0
+
+# ============================================
+# VECTOR SEARCH & ML (Optimized)
+# ============================================
+sentence-transformers>=2.3.0
+faiss-cpu>=1.7.4
+chromadb>=0.4.22
+rank-bm25>=0.2.2
+numpy>=1.26.0
+tiktoken>=0.7.0
+
+# ============================================
+# DOCUMENT PROCESSING
+# ============================================
+PyPDF2>=3.0.1
+python-docx>=1.1.0
+python-pptx>=0.6.21
+openpyxl>=3.1.2
+beautifulsoup4>=4.12.2
+pandas>=2.1.0
+Pillow>=10.2.0
+
+# ============================================
+# CLOUD & VOICE SERVICES (Headless Compatible)
+# ============================================
+google-cloud-speech>=2.24.0
+google-cloud-texttospeech>=2.16.0
+azure-search-documents>=11.4.0
+soundfile>=0.12.1
+
+# ============================================
+# UTILITIES
+# ============================================
+python-dotenv>=1.0.0
+plotly>=5.18.0
+pytest>=7.4.3
+
+# ============================================
+# GOOGLE CLOUD SECRET MANAGER
+# ============================================
+google-cloud-secret-manager

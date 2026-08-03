@@ -1,0 +1,66 @@
+{
+  "name": "Approve User",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "approve-user",
+        "responseMode": "onReceived",
+        "httpMethod": "GET",
+        "options": {}
+      },
+      "id": "webhook-approve",
+      "name": "Approval Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Get ticket from query parameters\nconst ticket = $input.first().json.query?.ticket || $input.first().json.ticket;\n\nif (!ticket) {\n  throw new Error('Ticket is required');\n}\n\n// Mock user data (in real app, fetch from database)\nconst user = {\n  ticket: ticket,\n  email: 'user@example.com',\n  name: 'New User',\n  password: Math.random().toString(36).substring(7),\n  status: 'APPROVED',\n  approved_at: new Date().toISOString()\n};\n\nreturn user;"
+      },
+      "id": "process-approval",
+      "name": "Process Approval",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "admin@insurance.ai",
+        "toEmail": "={{ $json.email }}",
+        "subject": "✅ Your Account Has Been Approved!",
+        "text": "Welcome to Insurance AI!\n\nYour account has been approved.\n\nLogin Details:\nEmail: {{ $json.email }}\nPassword: {{ $json.password }}\nTicket: {{ $json.ticket }}\n\nLogin URL: https://your-domain.com/login\n\nPlease change your password after first login.\n\nThank you,\nInsurance AI Team",
+        "options": {}
+      },
+      "id": "send-welcome-email",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "responseBody": "{\"status\":\"approved\",\"ticket\":\"{{ $json.ticket }}\",\"message\":\"User has been approved! Welcome email sent.\"}"
+      },
+      "id": "response-approve",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Approval Webhook": {
+      "main": [[{"node": "Process Approval", "type": "main", "index": 0}]]
+    },
+    "Process Approval": {
+      "main": [[{"node": "Send Welcome Email", "type": "main", "index": 0}]]
+    },
+    "Send Welcome Email": {
+      "main": [[{"node": "Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

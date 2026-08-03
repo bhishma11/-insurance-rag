@@ -1,0 +1,352 @@
+# ============================================================================
+# STEP 0: INSTALL REQUIRED LIBRARIES
+# ============================================================================
+
+print("📥 Installing required libraries...")
+!pip install -q trl==0.9.0 datasets peft transformers accelerate
+print("✅ Libraries installed!")
+
+# ============================================================================
+# IMPORTS
+# ============================================================================
+
+import json
+import os
+import gc
+import torch
+import shutil
+from pathlib import Path
+from transformers import (
+    AutoModelForCausalLM, 
+    AutoTokenizer, 
+    BitsAndBytesConfig,
+    TrainingArguments,
+    DataCollatorForLanguageModeling,
+    Trainer
+)
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
+from datasets import Dataset
+
+print("✅ All imports successful!")
+
+# ============================================================================
+# STEP 1: LOAD YOUR DATA
+# ============================================================================
+
+print("=" * 70)
+print("📥 LOADING YOUR INSURANCE DATA")
+print("=" * 70)
+
+# Your file path from Kaggle
+jsonl_path = "/kaggle/input/datasets/bhishmakhettri/training-data-for-qlora-qwen-7b/insurance_qa_large.jsonl"
+
+def load_jsonl(file_path):
+    """Load JSONL file"""
+    data = []
+    print(f"📂 Loading: {file_path}")
+    
+    if not os.path.exists(file_path):
+        print(f"❌ File not found: {file_path}")
+        return []
+    
+    with open(file_path, 'r', encoding='utf-8') as f:
+        for line_num, line in enumerate(f, 1):
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                data.append(json.loads(line))
+            except json.JSONDecodeError as e:
+                print(f"⚠️ Line {line_num} skipped: {e}")
+    
+    print(f"✅ Loaded {len(data)} entries")
+    return data
+
+insurance_data = load_jsonl(jsonl_path)
+
+# Show sample
+if insurance_data:
+    print(f"\n📝 Sample data:")
+    print(f"   Instruction: {insurance_data[0].get('instruction', 'N/A')[:100]}")
+    print(f"   Response: {insurance_data[0].get('response', 'N/A')[:100]}")
+else:
+    print("❌ No data loaded! Please check the file path.")
+    raise ValueError("No data available")
+
+# ============================================================================
+# STEP 2: PREPARE DATA FOR FINE-TUNING
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🔄 PREPARING DATA FOR FINE-TUNING")
+print("=" * 70)
+
+# Format for Qwen instruction format
+def format_instruction(example):
+    return {
+        "text": f"<|im_start|>user\n{example['instruction']}<|im_end|>\n<|im_start|>assistant\n{example['response']}<|im_end|>"
+    }
+
+# Convert to Hugging Face Dataset and format
+dataset = Dataset.from_list(insurance_data)
+dataset = dataset.map(format_instruction)
+
+# Split into train/val (90/10)
+dataset = dataset.train_test_split(test_size=0.1, seed=42)
+train_dataset = dataset['train']
+val_dataset = dataset['test']
+
+print(f"📊 Train samples: {len(train_dataset)}")
+print(f"📊 Validation samples: {len(val_dataset)}")
+
+# Show sample
+print(f"\n📝 Sample training data:")
+print(train_dataset[0]['text'][:200] + "...")
+
+# ============================================================================
+# STEP 3: LOAD/VERIFY QLORA MODEL
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("📥 VERIFYING QLORA MODEL")
+print("=" * 70)
+
+# Check if model exists in model_manager
+if hasattr(model_manager, '_qlora_model') and model_manager._qlora_model is not None:
+    print("✅ Using existing QLoRA model from Model Manager")
+    model = model_manager._qlora_model
+    tokenizer = model_manager._qlora_tokenizer
+else:
+    print("📥 Loading QLoRA model (Qwen2.5-7B with 4-bit quantization)...")
+    
+    # Configure 4-bit quantization
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.float16,
+        bnb_4bit_use_double_quant=True,
+    )
+    
+    # Load model
+    model = AutoModelForCausalLM.from_pretrained(
+        "Qwen/Qwen2.5-7B-Instruct",
+        torch_dtype=torch.float16,
+        device_map="auto",
+        quantization_config=bnb_config,
+        trust_remote_code=True,
+    )
+    
+    # Load tokenizer
+    tokenizer = AutoTokenizer.from_pretrained("Qwen/Qwen2.5-7B-Instruct")
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+    
+    print("✅ Model loaded!")
+
+print(f"📊 Model device: {next(model.parameters()).device}")
+print(f"📊 Model dtype: {next(model.parameters()).dtype}")
+
+# ============================================================================
+# STEP 4: PREPARE MODEL FOR FINE-TUNING
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🔧 PREPARING MODEL FOR FINE-TUNING")
+print("=" * 70)
+
+# Clear memory
+torch.cuda.empty_cache()
+gc.collect()
+
+# Enable gradient checkpointing (saves memory)
+model.gradient_checkpointing_enable()
+
+# Prepare for k-bit training
+model = prepare_model_for_kbit_training(model)
+
+# Configure LoRA
+lora_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+    lora_dropout=0.05,
+    bias="none",
+    task_type="CAUSAL_LM",
+)
+
+# Apply LoRA to model
+qlora_model = get_peft_model(model, lora_config)
+
+# Print trainable parameters
+qlora_model.print_trainable_parameters()
+
+# ============================================================================
+# STEP 5: TOKENIZE DATASET
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🔄 TOKENIZING DATASET")
+print("=" * 70)
+
+def tokenize_function(examples):
+    return tokenizer(
+        examples["text"],
+        truncation=True,
+        max_length=512,
+        padding="max_length",
+    )
+
+# Tokenize datasets
+tokenized_train = train_dataset.map(tokenize_function, batched=True, remove_columns=train_dataset.column_names)
+tokenized_val = val_dataset.map(tokenize_function, batched=True, remove_columns=val_dataset.column_names)
+
+print("✅ Dataset tokenized!")
+
+# ============================================================================
+# STEP 6: TRAINING CONFIGURATION
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("⚙️ CONFIGURING TRAINING")
+print("=" * 70)
+
+# Set up training arguments
+training_args = TrainingArguments(
+    output_dir="./qwen-insurance-finetuned",
+    num_train_epochs=2,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=1,
+    gradient_accumulation_steps=4,
+    optim="paged_adamw_8bit",
+    save_steps=50,
+    logging_steps=20,
+    learning_rate=2e-4,
+    fp16=True,
+    max_grad_norm=0.3,
+    warmup_ratio=0.03,
+    lr_scheduler_type="cosine",
+    eval_strategy="steps",
+    eval_steps=50,
+    load_best_model_at_end=True,
+    metric_for_best_model="eval_loss",
+    greater_is_better=False,
+    save_total_limit=2,
+    report_to="none",
+)
+
+# Create data collator
+data_collator = DataCollatorForLanguageModeling(
+    tokenizer=tokenizer,
+    mlm=False,
+)
+
+print("✅ Training config ready!")
+
+# ============================================================================
+# STEP 7: CREATE TRAINER (FIXED - removed tokenizer parameter)
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🚀 CREATING TRAINER")
+print("=" * 70)
+
+# Use standard Trainer without tokenizer parameter
+trainer = Trainer(
+    model=qlora_model,
+    args=training_args,
+    train_dataset=tokenized_train,
+    eval_dataset=tokenized_val,
+    data_collator=data_collator,
+)
+
+print("✅ Trainer created! Starting training...")
+
+# ============================================================================
+# STEP 8: START TRAINING
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🏋️ TRAINING STARTED")
+print("=" * 70)
+print("⏳ This will take 1-2 hours...")
+print("📊 Progress will show below:")
+
+# Train the model
+trainer.train()
+
+print("\n✅ Fine-tuning complete!")
+
+# ============================================================================
+# STEP 9: SAVE THE FINE-TUNED MODEL
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("💾 SAVING FINE-TUNED MODEL")
+print("=" * 70)
+
+# Save adapter
+qlora_model.save_pretrained("./qwen-insurance-adapter")
+tokenizer.save_pretrained("./qwen-insurance-adapter")
+
+print("✅ Adapter saved to: ./qwen-insurance-adapter")
+
+# Create zip for download
+shutil.make_archive('qwen-insurance-adapter', 'zip', './qwen-insurance-adapter')
+print("✅ Adapter zipped: qwen-insurance-adapter.zip")
+
+# ============================================================================
+# STEP 10: TEST THE FINE-TUNED MODEL
+# ============================================================================
+
+print("\n" + "=" * 70)
+print("🧪 TESTING FINE-TUNED MODEL")
+print("=" * 70)
+
+# Test with insurance questions
+test_questions = [
+    "How much for a 38-year-old with $50,000 car?",
+    "Does auto insurance cover flood damage?",
+    "What is the difference between actual cash value and replacement cost?",
+]
+
+for i, test_question in enumerate(test_questions, 1):
+    print(f"\n📝 Test {i}: {test_question}")
+    
+    inputs = tokenizer(test_question, return_tensors="pt")
+    inputs = {k: v.to(qlora_model.device) for k, v in inputs.items()}
+    
+    with torch.no_grad():
+        outputs = qlora_model.generate(
+            inputs['input_ids'],
+            max_new_tokens=150,
+            do_sample=True,
+            temperature=0.7,
+            top_p=0.9,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+    
+    response = tokenizer.decode(outputs[0], skip_special_tokens=True)
+    print(f"🤖 Response: {response[:200]}...")
+
+# ============================================================================
+# STEP 11: MEMORY USAGE
+# ============================================================================
+
+if torch.cuda.is_available():
+    print("\n" + "=" * 70)
+    print("📊 GPU MEMORY USAGE")
+    print("=" * 70)
+    allocated = torch.cuda.memory_allocated() / 1024**3
+    reserved = torch.cuda.memory_reserved() / 1024**3
+    total = torch.cuda.get_device_properties(0).total_memory / 1024**3
+    
+    print(f"💾 Allocated: {allocated:.2f} GB")
+    print(f"💾 Reserved: {reserved:.2f} GB")
+    print(f"💾 Total: {total:.2f} GB")
+    print(f"💾 Free: {total - allocated:.2f} GB")
+
+print("\n" + "=" * 70)
+print("✅ DONE! Fine-tuned model ready for deployment!")
+print("=" * 70)
+print("\n📦 Download: qwen-insurance-adapter.zip from Kaggle Output")
+print("🔗 Use in Google Cloud: Upload the adapter.zip")

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "insurance-rag": {
+      "command": "python",
+      "args": [
+        "C:\\Users\\khett\\Desktop\\insurance-rag-backend\\run_mcp_server.py"
+      ],
+      "env": {
+        "DEEPSEEK_API_KEY": "your-deepseek-api-key-here",
+        "PYTHONUNBUFFERED": "1"
+      }
+    }
+  }
+}

@@ -1,0 +1,217 @@
+{
+  "average_answer_relevancy": 0.8657142857142858,
+  "average_faithfulness": 0.9142857142857143,
+  "overall_score": 0.89,
+  "individual_results": [
+    {
+      "question": "Does renters insurance cover a stolen laptop?",
+      "answer": "Based solely on the policy details provided, **yes, a stolen laptop is covered under your Renters Insurance (Policy Number RENT-2024-001), subject to the Theft Deductible.**\n\n**Actionable Answer:**\n1....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What is the theft deductible for renters?",
+      "answer": "According to the RENT-2024-001 policy details provided, the theft deductible is **$500**....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Is flood damage covered under renters?",
+      "answer": "No, flood damage is not covered under your renters insurance policy (RENT-2024-001). The policy explicitly lists \"Flood damage (not covered)\" under Exclusions. To protect against flood damage, you wou...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What if someone slips and falls in my apartment?",
+      "answer": "Based on the policies you provided, here is the clear and actionable answer regarding a slip and fall in your apartment:\n\n**Yes, this is covered, but only under your Renters policy (RENT-2024-001), no...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What is the emergency room copay?",
+      "answer": "Based on the policy details provided, the emergency room copay is **$150**. This copay is waived if you are admitted to the hospital following the emergency room visit....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What's the out-of-pocket maximum?",
+      "answer": "Based on the **HEALTH-2024-002** policy you provided, the **out-of-pocket maximum is $5,000 per person.**...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Does health insurance cover therapy sessions?",
+      "answer": "Based on the policy details provided for **Lemonade Health (POLICY NUMBER: HEALTH-2024-002)**, therapy sessions are **not explicitly listed as a covered benefit**.\n\n**Actionable Answer:**  \nThe policy...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 0.7
+    },
+    {
+      "question": "What's the individual deductible for health?",
+      "answer": "The individual deductible for the health policy is **$1,500 per year**....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Is windshield damage covered?",
+      "answer": "Based solely on the policy information provided, **yes, windshield damage is covered** under the Auto policy.\n\n**The specific coverage is:** Comprehensive coverage (which covers weather and glass) wit...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What's the collision deductible?",
+      "answer": "The collision deductible is **$1,000**....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What's the comprehensive deductible?",
+      "answer": "Based on the policy details provided for **AUTO-2024-003** (the 2022 Toyota Camry), the comprehensive deductible is **$500**....",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Does auto cover my laptop stolen from car?",
+      "answer": "**Answer: No, your Auto policy (AUTO-2024-003) does not cover a laptop stolen from your car.**\n\nHere\u2019s the breakdown:\n\n- **Comprehensive coverage** on the Auto policy covers theft of the vehicle itsel...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "My laptop was stolen from my car. Which policy applies?",
+      "answer": "Based on the policies provided, here is the clear answer:\n\n**The Renter's Insurance policy (RENT-2024-001) applies to the theft of your laptop, not the Auto policy.**\n\nHere is the breakdown of why and...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Which policy has the lowest deductible?",
+      "answer": "The policy with the lowest deductible is the **Auto policy (AUTO-2024-003)** for glass/windshield coverage, which has a **$0 deductible**. \n\nFor other coverages under that policy, the deductibles are ...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What's covered under all three policies?",
+      "answer": "Based on the policy details provided, here is a summary of what is covered under all three policies:\n\n**1. Auto Policy (AUTO-2024-003)**\n- **Liability:** Damage you cause to others (up to $250k/person...",
+      "answer_relevancy": 0.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Which policy has no deductible?",
+      "answer": "Based on the policy details provided, the **Auto Policy (AUTO-2024-003)** has a $0 deductible for glass/windshield coverage. \n\nSpecifically, under the deductibles section for that policy, it states: \"...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Calculate my premium for a 28-year-old with $35,000 car",
+      "answer": "Based on the policy documents provided, I cannot calculate a premium for a 28-year-old with a $35,000 car. The policies you shared are **declarations pages** (showing coverage limits, deductibles, and...",
+      "answer_relevancy": 0.0,
+      "faithfulness": 0.9
+    },
+    {
+      "question": "How much for a 45-year-old with $50k car?",
+      "answer": "Based on the policies provided, I cannot give you a specific premium quote for a 45-year-old with a $50,000 car. The documents you shared are **policy declarations pages** (summaries of coverage and l...",
+      "answer_relevancy": 0.7,
+      "faithfulness": 0.7
+    },
+    {
+      "question": "Basic coverage for 30-year-old with $20,000 car",
+      "answer": "Based on the policy details you provided, here is the clear, actionable answer regarding basic coverage for a 30-year-old with a $20,000 car.\n\n**Your best \"basic\" coverage option is the Auto policy (A...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 0.9
+    },
+    {
+      "question": "Check claim status for CL-12345",
+      "answer": "Based on the policies provided, I do not have access to any real-time claims system or database to check the status of claim CL-12345. As an insurance adjuster, I can guide you on the typical steps an...",
+      "answer_relevancy": 0.3,
+      "faithfulness": 0.7
+    },
+    {
+      "question": "What's the status of my claim?",
+      "answer": "Based on the policy information you have provided, I do not see any claim details or status updates. To give you an accurate answer, I need the following information:\n\n1. **Claim Number** (e.g., CLM-2...",
+      "answer_relevancy": 0.7,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Check claim CL-67890",
+      "answer": "Based on the policy information provided, I cannot process or check claim **CL-67890** because **no details about this specific claim** have been given.\n\nTo evaluate this claim, I need you to provide ...",
+      "answer_relevancy": 0.7,
+      "faithfulness": 0.9
+    },
+    {
+      "question": "Schedule a callback for tomorrow at 2 PM",
+      "answer": "I cannot schedule a callback because I am an AI assistant without access to your calendar, phone system, or scheduling tools.\n\nHowever, I can advise you on how to proceed:\n\n**For a claim callback with...",
+      "answer_relevancy": 0.3,
+      "faithfulness": 0.0
+    },
+    {
+      "question": "Call me back about my claim",
+      "answer": "Of course. I can see you have active policies with Lemonade Insurance. Before I call you back, I need a few key details to properly address your claim.\n\nPlease provide the following:\n\n1. **Which polic...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Compare renters vs auto insurance",
+      "answer": "Here's a clear, actionable comparison between **Renters Insurance** and **Auto Insurance** based on the policies you provided.\n\n---\n\n## Key Differences at a Glance\n\n| **Feature** | **Renters Insurance...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 0.9
+    },
+    {
+      "question": "What's the difference between health and auto?",
+      "answer": "The key differences between your health insurance policy (HEALTH-2024-002) and auto insurance policy (AUTO-2024-003) are:\n\n1. **What they cover**  \n   - **Health**: Medical expenses (hospitalization, ...",
+      "answer_relevancy": 0.9,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What are the coverage limits for each policy?",
+      "answer": "Here are the coverage limits for each policy based on the information provided:\n\n**1. Auto Policy (AUTO-2024-003)**\n- **Liability (damage to others):** $250,000 per person / $500,000 per accident\n- **...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What are the deductibles for each policy?",
+      "answer": "Here are the deductibles for each policy:\n\n1. **Health Policy (HEALTH-2024-002):**\n   - Individual deductible: **$1,500 per year**\n   - Family deductible: **$3,000 per year**\n   - Out-of-pocket maximu...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What is NOT covered under my policies?",
+      "answer": "Based on the policy details you provided, here is a clear list of what is **NOT covered** under each of your policies:\n\n**1. Renters Insurance (Policy RENT-2024-001)**\n- **Flood damage** (e.g., rising...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "How do I file a claim?",
+      "answer": "**How to File a Claim (General Steps for All Three Policies)**\n\nSince you have three different policies (Auto, Renters, and Health), the filing process differs slightly. Here is the clear, actionable ...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 0.7
+    },
+    {
+      "question": "What is the deductible for renters insurance?",
+      "answer": "Based on the policy information provided, the deductibles for the renters insurance policy (POLICY NUMBER: RENT-2024-001) are:\n\n- **Standard deductible:** $500\n- **Water damage deductible:** $1,000\n- ...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "Does health insurance cover therapy?",
+      "answer": "Based solely on the policy details you provided, **the health insurance policy does not explicitly state whether therapy is covered or excluded.**\n\nHere is the actionable breakdown:\n\n1.  **No Mention ...",
+      "answer_relevancy": 0.7,
+      "faithfulness": 0.7
+    },
+    {
+      "question": "Is windshield damage covered under auto?",
+      "answer": "Yes, windshield damage is covered under your auto policy.\n\n**Key details:**\n- This falls under **Comprehensive** coverage (which covers glass, theft, weather, etc.).\n- The **deductible for glass/winds...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    },
+    {
+      "question": "What's the difference between health and auto?",
+      "answer": "The key difference between health and auto insurance lies in **what they cover** and **how they pay out**:\n\n- **Health Insurance** covers medical expenses for illness, injury, and preventive care. It ...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 0.9
+    },
+    {
+      "question": "Which policy covers injury to others?",
+      "answer": "The **Rent-2024-001** policy covers injury to others under its **Personal Liability** coverage, with a limit of **$100,000**. This applies if someone is hurt in your home (e.g., a guest slips and fall...",
+      "answer_relevancy": 1.0,
+      "faithfulness": 1.0
+    }
+  ]
+}

@@ -1,0 +1,57 @@
+{
+  "name": "Send Approval Email",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "send-approval-email",
+        "responseMode": "onReceived",
+        "httpMethod": "POST",
+        "responseData": "{\"success\":true,\"message\":\"Approval email sent\"}",
+        "options": {}
+      },
+      "id": "webhook-approval",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "fromEmail": "admin@insurance.ai",
+        "toEmail": "khettrib@gmail.com",
+        "subject": "🔑 New User Approval Required - {{ $json.user.name }}",
+        "text": "NEW USER ACCESS REQUEST\n\nUser: {{ $json.user.name }}\nEmail: {{ $json.user.email }}\nUser ID: {{ $json.user.user_id }}\nCompany: {{ $json.user.company }}\nRequest Date: {{ $json.user.request_date }}\n\nTo APPROVE this user, use the admin API:\nPOST /api/admin/approve\n{\n  \"email\": \"{{ $json.user.email }}\",\n  \"admin_key\": \"admin123\"\n}\n\nOr use the admin dashboard.\n\nThank you,\nInsurance AI Team",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "disabled": false
+    },
+    {
+      "parameters": {
+        "responseBody": "{\"success\":true,\"message\":\"Approval email sent to admin\"}"
+      },
+      "id": "response",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "disabled": false
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [[{"node": "Send Email", "type": "main", "index": 0}]]
+    },
+    "Send Email": {
+      "main": [[{"node": "Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

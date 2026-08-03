@@ -1,0 +1,51 @@
+# ⚠️ SECURITY - API Keys & Secrets
+.env
+.env.local
+env.yaml
+env-n8n.yaml
+google-key.json
+kaggle.json
+*.pem
+*.key
+
+# 📦 Large Model Files
+*.pkl
+*.pickle
+*.pt
+*.h5
+*.onnx
+*.bin
+*.safetensors
+qlora_adapters/
+qlora_adapters_gpu/
+faiss_index.pkl
+
+# 🗄️ Local Databases
+*.db
+*.sqlite
+*.sqlite3
+chat_history.db
+postgres_data/
+
+# 🐍 Python Cache
+__pycache__/
+*.pyc
+*.pyo
+
+# 📁 Temp & Cache
+cache/
+temp/
+*.tmp
+*.log
+
+# 📦 Build
+dist/
+build/
+*.egg-info/
+*.whl
+
+# 🚀 Deployment
+deploy.zip
+*.zip
+Dockerfile-1
+docker-compose.override.yml

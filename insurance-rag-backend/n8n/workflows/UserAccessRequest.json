@@ -1,0 +1,67 @@
+{
+  "name": "User Access Request",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "user-request",
+        "responseMode": "onReceived",
+        "httpMethod": "POST",
+        "responseData": "{\"status\":\"pending\",\"message\":\"Your request has been submitted for approval\"}",
+        "options": {}
+      },
+      "id": "webhook-user",
+      "name": "User Request",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const data = $input.first().json;\nconst user = data.user || {};\n\n// Validate email\nif (!user.email) {\n  throw new Error('Email is required');\n}\n\n// Generate ticket\nconst ticket = 'TICKET-' + Date.now() + '-' + Math.random().toString(36).substring(7);\n\n// Create user request\nconst result = {\n  ticket: ticket,\n  email: user.email,\n  name: user.name || 'New User',\n  company: user.company || 'N/A',\n  status: 'PENDING_APPROVAL',\n  request_date: new Date().toISOString(),\n  approval_url: `http://localhost:5678/webhook-test/approve-user?ticket=${ticket}`\n};\n\nreturn result;"
+      },
+      "id": "generate-ticket",
+      "name": "Generate Ticket",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "admin@insurance.ai",
+        "toEmail": "YOUR_EMAIL@example.com",
+        "subject": "🔑 New User Access Request - Ticket {{ $json.ticket }}",
+        "text": "NEW USER ACCESS REQUEST\n\nTicket: {{ $json.ticket }}\nName: {{ $json.name }}\nEmail: {{ $json.email }}\nCompany: {{ $json.company }}\nRequest Date: {{ $json.request_date }}\n\nTo APPROVE this user:\n{{ $json.approval_url }}\n\nOr reply to this email with:\nAPPROVE {{ $json.ticket }}\n\nTo REJECT:\nREJECT {{ $json.ticket }}",
+        "options": {}
+      },
+      "id": "send-approval-email",
+      "name": "Send Approval Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "responseBody": "{\"status\":\"pending\",\"ticket\":\"{{ $json.ticket }}\",\"message\":\"Your request is pending approval. You will receive an email once approved.\"}"
+      },
+      "id": "response-user",
+      "name": "Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "User Request": {
+      "main": [[{"node": "Generate Ticket", "type": "main", "index": 0}]]
+    },
+    "Generate Ticket": {
+      "main": [[{"node": "Send Approval Email", "type": "main", "index": 0}]]
+    },
+    "Send Approval Email": {
+      "main": [[{"node": "Response", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
