@@ -54,4 +54,5 @@ docker-compose.override.yml
 offload/
 *.dat
 *.bin
-*.safetensors
+*.safetensorsoffload/ 
+*.dat 
