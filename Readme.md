@@ -164,7 +164,6 @@ The system intelligently routes user queries to specialized tools using MCP (Mod
 | Tool | What it does | Example |
 |------|--------------|---------|
 | **💰 Premium Calculator** | Calculates auto insurance premiums based on age + car value | "Calculate my premium for 30 year old with $35,000 car" |
-| **📋 Claim Checker** | Returns mock claim status | "Check claim status for CL-12345" |
 | **📞 Callback Scheduler** | Schedules agent callbacks | "Schedule a callback" |
 | **📊 Policy Comparator** | Compares deductibles and coverage | "Compare auto vs renters insurance" |
 | **📖 Policy Search** | Searches through policy documents | "What does my policy cover?" |
