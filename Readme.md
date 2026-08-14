@@ -379,12 +379,6 @@ How much for a 45-year-old with $50k car?
 Basic coverage for 30-year-old with $20,000 car
 ```
 
-### Claim & Callback
-```
-Check claim status for CL-12345
-Schedule a callback for tomorrow at 2 PM
-```
-
 ### Policy Comparison
 ```
 Compare auto vs renters insurance
